@@ -2,18 +2,18 @@ import { useEffect, useState } from "react";
 import { Button, Col, Form, Row, Stack } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
-import { getTableById, updateTable } from "../../redux/tablesRedux";
+import { getTableById, sendData } from "../../redux/tablesRedux";
 
 const Table = () => {
   const { id } = useParams();
   const table = useSelector((state) => getTableById(state, id));
 
-  const [status, setStatus] = useState(table.status);
-  const [peopleAmount, setPeopleAmount] = useState(Number(table.peopleAmount));
+  const [status, setStatus] = useState(table?.status);
+  const [peopleAmount, setPeopleAmount] = useState(Number(table?.peopleAmount));
   const [maxPeopleAmount, setMaxPeopleAmount] = useState(
-    Number(table.maxPeopleAmount)
+    Number(table?.maxPeopleAmount)
   );
-  const [bill, setBill] = useState(Number(table.bill));
+  const [bill, setBill] = useState(Number(table?.bill));
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -35,15 +35,14 @@ const Table = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("submitted!");
     const obj = {
-      id,
-      status,
+      id: id,
+      status: status,
       bill: bill.toString(),
       peopleAmount: peopleAmount.toString(),
       maxPeopleAmount: maxPeopleAmount.toString(),
     };
-    dispatch(updateTable(obj));
+    dispatch(sendData(obj));
     console.log(obj);
     navigate("/");
   };
@@ -78,7 +77,7 @@ const Table = () => {
               type="number"
               min="0"
               max={maxPeopleAmount}
-              value={peopleAmount || ""}
+              value={peopleAmount}
               onChange={(e) => setPeopleAmount(Number(e.target.value))}
             />
           </Col>
@@ -88,7 +87,7 @@ const Table = () => {
               type="number"
               min="0"
               max="10"
-              value={maxPeopleAmount || ""}
+              value={maxPeopleAmount}
               onChange={(e) => setMaxPeopleAmount(Number(e.target.value))}
             />
           </Col>
